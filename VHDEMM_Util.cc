@@ -4,11 +4,11 @@
  * 
  */
 
-#include"VH_Util.h"
+#include"VHDEMM_Util.h"
 using namespace CryptoPP;
 
 
-namespace VH
+namespace VHDEMM
 {
     std::string Util::H1(const std::string message)
     {
@@ -187,56 +187,7 @@ namespace VH
     }
 
 
-    void Util::set_db_common_options(rocksdb::Options &options)
-    {
-        //options.create_if_missing = true;
-        options.create_if_missing = true;
-        
-        //对于哈希表的设置
-        rocksdb::CuckooTableOptions cuckoo_options;
-        cuckoo_options.identity_as_first_hash = false;
-        cuckoo_options.hash_table_ratio = 0.9;  
-//        cuckoo_options.use_module_hash = false;
-//        cuckoo_options.identity_as_first_hash = true;
-
-        //RocksDB的调优选项
-        //table_cache_numshardbits 控制表缓存分片。如果表缓存互斥锁竞争激烈，增加这个。
-        //设置max_open_files为-1以永远允许打开文件，可以避免昂贵的表缓存调用。
-        options.table_cache_numshardbits = 4;
-        options.max_open_files = -1;
-        
-        options.table_factory.reset(rocksdb::NewCuckooTableFactory(cuckoo_options));
-        
-        options.memtable_factory.reset(new rocksdb::VectorRepFactory());
-        
-        options.compression = rocksdb::kNoCompression;
-        options.bottommost_compression = rocksdb::kDisableCompressionOption;
-
-        options.compaction_style = rocksdb::kCompactionStyleLevel;
-        options.info_log_level = rocksdb::InfoLogLevel::INFO_LEVEL;
-
-
-//        options.max_grandparent_overlap_factor = 10;
-        
-        options.delayed_write_rate = 8388608;
-        options.max_background_compactions = 20;
-
-//        options.disableDataSync = true;
-        options.allow_mmap_reads = true;
-        options.new_table_reader_for_compaction_inputs = true;
-        
-        options.allow_concurrent_memtable_write = options.memtable_factory->IsInsertConcurrentlySupported();
-        
-        //关于lsm tree的一些容量配置
-        options.max_bytes_for_level_base = 4294967296; // 4 GB
-        options.arena_block_size = 134217728; // 128 MB
-        options.level0_file_num_compaction_trigger = 10;
-        options.level0_slowdown_writes_trigger = 16;
-        options.hard_pending_compaction_bytes_limit = 137438953472; // 128 GB
-        options.target_file_size_base=201327616;
-        options.write_buffer_size=1073741824; // 1GB
-    }
-
+    
     bool Util::file_exist (const std::string& path) {
         return ( access( path.c_str(), F_OK ) != -1 );
     }

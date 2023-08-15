@@ -15,10 +15,6 @@
 #include <cryptopp/base64.h>
 #include<cryptopp/files.h>
 #include <bits/stdc++.h>
-#include <rocksdb/db.h>
-#include <rocksdb/table.h>
-#include <rocksdb/memtablerep.h>
-#include <rocksdb/options.h>
 #include <fstream>
 #include <iostream>
 using namespace CryptoPP;
@@ -39,7 +35,7 @@ using namespace CryptoPP;
 
 
 
-namespace VH
+namespace VHDEMM
 {
 
     class Util
@@ -65,8 +61,6 @@ namespace VH
         static std::string str2hex(const std::string &input);
 
         static std::string hex2str(const std::string &input);
-
-        static void set_db_common_options(rocksdb::Options &options);
 
         static void descrypt(std::string key, std::string iv,std::string ciphertext, std::string &plaintext); //AES解密
 
